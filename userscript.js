@@ -3,6 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      0.1
 // @description  Userscript that adds veto simulator dialog at hltv match analytics summary
+// @author       prudowicz
 // @match        https://www.hltv.org/betting/analytics/*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @require      http://code.jquery.com/jquery-3.6.0.min.js
@@ -53,10 +54,13 @@
     </div>
 ` );
 
-    
+
 
   //  $( "#date" ).dialog();
     function showVetoDialog() {
+        first_to_ban = t1_name
+        second_to_ban = t2_name
+        $("div#veto-dialog").remove();
         $("body").append( '\
     <div id="veto-dialog" style="display: none;"> \
               First pick  <br> \
@@ -87,12 +91,12 @@
 
     var first_to_ban = t1_name
     var second_to_ban = t2_name
-    
+
    // console.log("first_to_ban= " + window.first_to_ban);
     // console.log("second_to_ban= " + window.second_to_ban);
 
 
-   
+
 
     var veto_map_pool = [];
     let map_names = document.getElementsByClassName("analytics-map-name");
