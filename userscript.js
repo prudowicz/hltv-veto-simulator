@@ -58,34 +58,42 @@
 
   //  $( "#date" ).dialog();
     function showVetoDialog() {
-        first_to_ban = t1_name
-        second_to_ban = t2_name
+        maps_left_out = [].concat(veto_map_pool)
         $("div#veto-dialog").remove();
         $("body").append( '\
     <div id="veto-dialog" style="display: none;"> \
               First pick  <br> \
-<input type="radio" id="t1" name="first_pick" value="'+ t1_name + '" checked="checked">  \
+<input type="radio" id="t1" name="first_pick" value="'+ t1_name + '"' + (first_to_ban===t1_name ? 'checked="checked"' : '') + '>  \
 <label for="t1">'+ t1_name + '</label> &nbsp;&nbsp;\
-<input type="radio" id="t2" name="first_pick" value="'+ t2_name + '"> \
+<input type="radio" id="t2" name="first_pick" value="'+ t2_name + '"' + (first_to_ban===t2_name ? 'checked="checked"' : '') + '>  \
 <label for="t2">'+ t2_name + '</label> <br> ' + getVetoTable(first_to_ban, second_to_ban, veto_map_pool) + '\
                      </div> \
 ');
 
+
          $( "#veto-dialog" ).dialog();
 
          $('input[name="first_pick"]').change(function() {
-             second_to_ban = first_to_ban
              first_to_ban = $('input[name="first_pick"]:checked').val();
-             console.log("first_to_ban= " + first_to_ban);
-             console.log("second_to_ban= " + second_to_ban);
+             if (first_to_ban == t2_name) {
+                 second_to_ban = t1_name;
+             }
+             else {
+                 second_to_ban = t2_name;
+             }
+            // console.log("first_to_ban= " + first_to_ban);
+            // console.log("second_to_ban= " + second_to_ban);
+             maps_left_out = [].concat(veto_map_pool)
              $('#veto-table').remove();
              $('div#veto-dialog').append(getVetoTable(first_to_ban, second_to_ban, veto_map_pool))
+             $('select[name="veto-select"]').on("change", onChangeOfVetoSelect);
          });
 
 
 
         $('select[name="veto-select"]').on("change", onChangeOfVetoSelect);
     };
+
 
     $("#veto-button").click(showVetoDialog);
 
@@ -109,7 +117,7 @@
   //  console.log(veto_map_pool)
     const veto_length = veto_map_pool.length
     var maps_left_out = [].concat(veto_map_pool)
-    console.log(maps_left_out);
+    // console.log(maps_left_out);
 
     function getVetoTable(first_to_ban, second_to_ban, veto_map_pool) {
     //    console.log(first_to_ban);
@@ -182,15 +190,15 @@
 
     function onChangeOfVetoSelect() {
             let id = $(this).attr("id");
-            console.log(id);
+           // console.log(id);
             //console.log(veto_length)
             let next_id = parseInt(id) + 1
             for(let i = next_id; i < veto_length; i++) {
-                 console.log(i)
+               //  console.log(i)
                  let map_to_remove = $('select#' + id).val();
                  if (map_to_remove === 'null') return;
                  maps_left_out = maps_left_out.filter(e => e !== map_to_remove);
-                 console.log(maps_left_out);
+              //   console.log(maps_left_out);
                  $('select#' + i).remove();
                  let span_id = "span" + i
                  $('span#' + span_id).append(getSelectVetoElement(maps_left_out, i));
